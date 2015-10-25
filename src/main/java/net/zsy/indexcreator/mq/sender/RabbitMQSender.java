@@ -74,6 +74,7 @@ public class RabbitMQSender implements Sender {
 	public synchronized void stop() {
 		if (started) {
 			sendThread.interrupt();
+			started = false;
 		}
 	}
 
@@ -122,7 +123,7 @@ public class RabbitMQSender implements Sender {
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			} finally {
-				if (channel != null) {
+				if (channel != null && channel.isOpen()) {
 					try {
 						channel.close();
 					} catch (IOException e) {
@@ -131,7 +132,7 @@ public class RabbitMQSender implements Sender {
 						e.printStackTrace();
 					}
 				}
-				if (connection != null) {
+				if (connection != null && channel.isOpen()) {
 					try {
 						connection.close();
 					} catch (IOException e) {

@@ -37,7 +37,7 @@ public class RabbitMQAccepter implements Accepter {
 	private Boolean inited = false;
 	private Boolean started = false;
 
-	BlockingQueue<String> messages = new LinkedBlockingQueue<String>();
+	private BlockingQueue<String> messages = new LinkedBlockingQueue<String>();
 
 	private ExecutorService exec;
 
@@ -77,7 +77,7 @@ public class RabbitMQAccepter implements Accepter {
 
 	@Override
 	public synchronized void start() {
-		if (!started) {
+		if (inited && !started) {
 			for (ConnectionFactory connectionFactory : connectionFactories) {
 				Runnable r = new AcceptThread(connectionFactory);
 				exec.submit(r);
@@ -88,8 +88,10 @@ public class RabbitMQAccepter implements Accepter {
 
 	@Override
 	public synchronized void stop() {
-		if (!exec.isShutdown())
+		if (started && !exec.isShutdown()) {
 			exec.shutdown();
+			started = false;
+		}
 	}
 
 	@Override
@@ -151,7 +153,7 @@ public class RabbitMQAccepter implements Accepter {
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			} finally {
-				if (channel != null) {
+				if (channel != null && channel.isOpen()) {
 					try {
 						channel.close();
 					} catch (IOException e) {
@@ -160,7 +162,7 @@ public class RabbitMQAccepter implements Accepter {
 						e.printStackTrace();
 					}
 				}
-				if (connection != null) {
+				if (connection != null && connection.isOpen()) {
 					try {
 						connection.close();
 					} catch (IOException e) {
@@ -182,19 +184,19 @@ public class RabbitMQAccepter implements Accepter {
 		if (threads.containsKey(host))
 			threads.get(host).shutdown();
 	}
+
 	public static void main(String[] args) {
-		Map<String, String> map=new HashMap<>();
+		Map<String, String> map = new HashMap<>();
 		map.put("id", "100000");
 		map.put("type", "product");
 		map.put("objTypeId", "1");
 		map.put("objId", "263080");
-		
-		ObjectMapper mapper=new ObjectMapper();
+
+		ObjectMapper mapper = new ObjectMapper();
 		try {
-			String jsonstring=mapper.writeValueAsString(map);
+			String jsonstring = mapper.writeValueAsString(map);
 			System.out.println(jsonstring);
 		} catch (JsonProcessingException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
