@@ -186,7 +186,7 @@ public class RabbitMQAccepter implements Accepter {
 	}
 
 	public static void main(String[] args) {
-		Map<String, String> map = new HashMap<>();
+		Map<String, String> map = new HashMap<String, String>();
 		map.put("id", "100000");
 		map.put("type", "product");
 		map.put("objTypeId", "1");

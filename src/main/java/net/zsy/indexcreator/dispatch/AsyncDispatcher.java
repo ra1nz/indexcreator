@@ -36,8 +36,8 @@ public class AsyncDispatcher implements Dispatcher {
 		if (!inited.get()) {
 			indexs = new LinkedBlockingQueue<Index>();
 			indexhandlers = new HashMap<Class<? extends Index>, IndexHandler>();
+			inited.set(true);
 		}
-		inited.set(true);
 	}
 
 	@Override

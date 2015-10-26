@@ -14,7 +14,11 @@ public class App {
 		final Sender sender = MessageQueues.getSender();
 
 		final Dispatcher dispatcher = new AsyncDispatcher();
+		
 		dispatcher.init();
+		accepter.init();
+		dispatcher.init();
+		
 		dispatcher.register(ProductIndex.class, new ProductIndexHandler(sender.getQueue()));
 
 		Thread mainthread = new Thread() {

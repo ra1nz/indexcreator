@@ -1,5 +1,8 @@
 package net.zsy.indexcreator.product;
 
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -9,6 +12,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import net.zsy.indexcreator.dispatch.AsyncIndexHandler;
+import net.zsy.indexcreator.dispatch.Index;
 import net.zsy.indexcreator.dispatch.IndexHandler;
 import net.zsy.indexcreator.indexbean.Product;
 
@@ -49,8 +53,13 @@ public class ProductIndexHandler extends AsyncIndexHandler implements IndexHandl
 							Product p = new Product();
 							p.setId(index.getObjId());
 							try {
-								String jsonstring = objectMapper.writeValueAsString(p);
-								queue.put(jsonstring);
+								Map<String, Object> indexdata = new HashMap<String, Object>();
+								indexdata.put(Index.ID, p.getId());
+								indexdata.put(Index.TYPE, index.getType());
+								indexdata.put(Index.TIMESTAMP, new Date().getTime());
+								indexdata.put(Index.DATA, objectMapper.writeValueAsString(p));
+								String jsondata = objectMapper.writeValueAsString(indexdata);
+								queue.put(jsondata);
 							} catch (JsonProcessingException e) {
 								e.printStackTrace();
 							} catch (InterruptedException e) {

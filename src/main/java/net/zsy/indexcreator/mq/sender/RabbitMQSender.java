@@ -111,9 +111,7 @@ public class RabbitMQSender implements Sender {
 
 				while (started && !Thread.currentThread().isInterrupted()) {
 					String message = queue.take();
-					System.out.println("take:" + message);
 					channel.basicPublish("", queuename, null, message.getBytes());
-					System.out.println("done to " + queuename);
 				}
 				Thread.currentThread().interrupt();
 			} catch (IOException e) {
