@@ -27,8 +27,7 @@ public class Product implements Serializable {
 
 		this.attrs = new HashMap<String, String>();
 		for (int i = 0; i < RandomUtils.nextInt(5, 20); i++) {
-			attrs.put(RandomStringUtils.randomAlphabetic(RandomUtils.nextInt(5, 10)),
-					RandomStringUtils.randomAlphabetic(RandomUtils.nextInt(5, 50)));
+			attrs.put("attr_" + i, "value_" + id + "_" + i);
 		}
 		this.prices = new ArrayList<Price>();
 		for (int i = 0; i < RandomUtils.nextInt(1, 3); i++) {
