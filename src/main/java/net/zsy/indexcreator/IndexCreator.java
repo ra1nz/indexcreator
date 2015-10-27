@@ -8,7 +8,7 @@ import net.zsy.indexcreator.mq.Sender;
 import net.zsy.indexcreator.product.ProductIndex;
 import net.zsy.indexcreator.product.ProductIndexHandler;
 
-public class App {
+public class IndexCreator {
 	public static void main(String[] args) {
 		final Accepter accepter = MessageQueues.getAccepter();
 		final Sender sender = MessageQueues.getSender();
