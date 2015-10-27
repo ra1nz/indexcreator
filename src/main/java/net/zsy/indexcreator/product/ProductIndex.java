@@ -3,7 +3,10 @@ package net.zsy.indexcreator.product;
 import java.util.Map;
 
 import net.zsy.indexcreator.dispatch.AbstractIndex;
-
+/**
+ * 商品类型的索引创建消息定义
+ *
+ */
 public class ProductIndex extends AbstractIndex {
 
 	int id;

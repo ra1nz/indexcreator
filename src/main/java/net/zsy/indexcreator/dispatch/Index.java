@@ -1,5 +1,9 @@
 package net.zsy.indexcreator.dispatch;
 
+/**
+ * 索引类型接口
+ *
+ */
 public interface Index {
 
 	String getType();

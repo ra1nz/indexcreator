@@ -1,5 +1,9 @@
 package net.zsy.indexcreator.dispatch;
 
+/**
+ * 分发器接口
+ *
+ */
 public interface Dispatcher {
 
 	void init();

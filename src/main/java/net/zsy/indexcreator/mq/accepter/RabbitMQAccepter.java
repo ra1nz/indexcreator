@@ -15,8 +15,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.apache.commons.lang3.StringUtils;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
@@ -27,7 +25,10 @@ import com.rabbitmq.client.ShutdownSignalException;
 
 import net.zsy.indexcreator.mq.Accepter;
 import net.zsy.indexcreator.mq.MessageQueue;
-
+/**
+ * RabbitMQ消息队列接收器实现类，支持配置多个监听队列
+ *
+ */
 public class RabbitMQAccepter implements Accepter {
 
 	private Map<String, String> configurations;
@@ -111,6 +112,10 @@ public class RabbitMQAccepter implements Accepter {
 		this.configurations = configurations;
 	}
 
+	/**
+	 * 队列消息接收线程
+	 * 将接收到的消息放入messages 由${@link Accepter#accept()}获取
+	 */
 	private class AcceptThread implements Runnable {
 
 		private final ConnectionFactory connectionFactory;
@@ -135,6 +140,7 @@ public class RabbitMQAccepter implements Accepter {
 				while (!shutdown.get() && !Thread.currentThread().isInterrupted()) {
 					Delivery delivery = consumer.nextDelivery();
 					String message = new String(delivery.getBody());
+					//队列中未处理的消息大于1000时进入等待
 					while (messages.size() >= 1000) {
 						TimeUnit.SECONDS.sleep(3);
 					}
@@ -183,21 +189,5 @@ public class RabbitMQAccepter implements Accepter {
 	public void kill(String host) {
 		if (threads.containsKey(host))
 			threads.get(host).shutdown();
-	}
-
-	public static void main(String[] args) {
-		Map<String, String> map = new HashMap<String, String>();
-		map.put("id", "100000");
-		map.put("type", "product");
-		map.put("objTypeId", "1");
-		map.put("objId", "263080");
-
-		ObjectMapper mapper = new ObjectMapper();
-		try {
-			String jsonstring = mapper.writeValueAsString(map);
-			System.out.println(jsonstring);
-		} catch (JsonProcessingException e) {
-			e.printStackTrace();
-		}
 	}
 }

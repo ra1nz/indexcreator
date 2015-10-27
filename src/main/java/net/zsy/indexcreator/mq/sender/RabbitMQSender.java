@@ -15,7 +15,11 @@ import com.rabbitmq.client.ConnectionFactory;
 
 import net.zsy.indexcreator.mq.MessageQueue;
 import net.zsy.indexcreator.mq.Sender;
-
+/**
+ * RabbitMQ消息队列发送器实现
+ * 只支持单个队列发送消息
+ * 异步发送
+ */
 public class RabbitMQSender implements Sender {
 
 	private Map<String, String> configurations;
@@ -29,6 +33,7 @@ public class RabbitMQSender implements Sender {
 	private Boolean inited = false;
 	private Boolean started = false;
 
+	//异步消息队列
 	private BlockingQueue<String> queue;
 
 	@Override

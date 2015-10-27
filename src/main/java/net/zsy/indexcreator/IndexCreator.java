@@ -6,8 +6,11 @@ import net.zsy.indexcreator.mq.Accepter;
 import net.zsy.indexcreator.mq.MessageQueues;
 import net.zsy.indexcreator.mq.Sender;
 import net.zsy.indexcreator.product.ProductIndex;
-import net.zsy.indexcreator.product.ProductIndexHandler;
-
+import net.zsy.indexcreator.product.ProductAsyncIndexHandler;
+/**
+ * 程序入口
+ *
+ */
 public class IndexCreator {
 	public static void main(String[] args) {
 		final Accepter accepter = MessageQueues.getAccepter();
@@ -19,7 +22,7 @@ public class IndexCreator {
 		accepter.init();
 		dispatcher.init();
 		
-		dispatcher.register(ProductIndex.class, new ProductIndexHandler(sender.getQueue()));
+		dispatcher.register(ProductIndex.class, new ProductAsyncIndexHandler(sender.getQueue()));
 
 		Thread mainthread = new Thread() {
 
