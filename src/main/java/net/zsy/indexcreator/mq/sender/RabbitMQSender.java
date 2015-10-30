@@ -135,7 +135,7 @@ public class RabbitMQSender implements Sender {
 						e.printStackTrace();
 					}
 				}
-				if (connection != null && channel.isOpen()) {
+				if (connection != null && connection.isOpen()) {
 					try {
 						connection.close();
 					} catch (IOException e) {
